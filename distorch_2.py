@@ -130,7 +130,7 @@ def register_patched_safetensor_modelpatcher():
 
                 if has_eject:
                     eject_device = device
-                    logger.mgpu_mm_log("DisTorch eject_models=True, is_distorch=True - MAX memory eviction")
+                    logger.info("[LOAD_MODELS_GPU] DisTorch eject_models=True, is_distorch=True - MAX memory eviction")
 
                 if is_distorch:
                     # is_distorch=True: use compute device allocation size
@@ -138,11 +138,11 @@ def register_patched_safetensor_modelpatcher():
                     virtual_vram_bytes = virtual_vram_gb * (1024**3)
                     adjusted_memory = max(0, base_memory - virtual_vram_bytes)
                     total_memory_required[device] = total_memory_required.get(device, 0) + adjusted_memory
-                    logger.mgpu_mm_log(f"DisTorch is_distorch=True, model adjusted {(base_memory - virtual_vram_bytes)/(1024**3):.2f}GB for device {device}")
+                    logger.info(f"[LOAD_MODELS_GPU] DisTorch is_distorch=True, model adjusted {(base_memory - virtual_vram_bytes)/(1024**3):.2f}GB for device {device}")
                 else:
                     # is_distorch=False: use full model size
                     total_memory_required[device] = total_memory_required.get(device, 0) + base_memory
-                    logger.mgpu_mm_log(f"[LOAD_MODELS_GPU] Standard model {(base_memory)/(1024**3):.2f}GB for device {device}")
+                    logger.info(f"[LOAD_MODELS_GPU] Standard model {(base_memory)/(1024**3):.2f}GB for device {device}")
 
             for device in total_memory_required:
                 if device != torch.device("cpu"):
